@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import pandas as pd
 
 
 def get_job_url(title: str, city: str) -> str:
@@ -44,7 +45,6 @@ def get_job_dict(job_url):
     job_location = job_html.find(
         'span', {"data-testid": "viewJobCompanyLocation"}
     ).text
-    job_detail = job_html.find('span', {"data-testid": "detailText"}).text
     skills_div = job_html.find(class_="chakra-wrap__list css-19lo6pj")
     skills_tag = skills_div.find_all(
         "span", {"data-testid": "viewJobQualificationItem"}
@@ -55,7 +55,6 @@ def get_job_dict(job_url):
         "title": job_title.strip(),
         "company": job_company.strip(),
         "location": job_location.strip(),
-        "details": job_detail.strip(),
         "skills": skills.strip() if skills else None,
         "link": job_links
     }
@@ -75,6 +74,13 @@ def main():
 
     doc = get_html(get_job_url(title, city))
     jobs_found = []
+    data = {
+        'job_title': [],
+        'company': [],
+        'location': [],
+        'skills': [],
+        'link': []
+    }
 
     while True:
         page_nav = doc.find("nav", {"role": "navigation", "class": "css-1hog1e3"})
@@ -82,14 +88,32 @@ def main():
         for job in jobs:
             job_found = get_job_dict(job)
             jobs_found.append(job_found)
-            print(job_found)
+            data['job_title'].append(job_found['title'])
+            data['company'].append(job_found['company'])
+            data['location'].append(job_found['location'])
+            data['skills'].append(job_found['skills'])
+            data["link"].append(job_found['link'])
+            print()
+            print(job_found['title'])
+            print(job_found['company'])
+            print(job_found['location'])
+            print(job_found['skills'])
+            print(job_found['link'])
+            print('-' * 10)
         next_page = page_nav.find("a", {"aria-label": "Next page"})
         if next_page:
             doc = get_html(next_page['href'])
         else:
             break
-        if len(jobs_found) >= 1000:
+        if len(jobs_found) >= 300:
             break
+
+    df = pd.DataFrame(data)
+    # Export csv file
+    df.to_csv('jobs.csv', index=False)
+    print()
+    print("+" * 15)
+    print("Exported jobs found as csv file (jobs.csv)")
 
 
 if __name__ == "__main__":
