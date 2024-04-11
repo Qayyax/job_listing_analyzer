@@ -1,15 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import re
-
-print()
-welcome = "Welcome to Job analyzer"
-print(welcome)
-print("=" * len(welcome))
-print()
-
-title = input("Enter your desired job title: ")
-city = input("Enter your desired location: ")
 
 
 def get_job_url(title: str, city: str) -> str:
@@ -73,20 +63,34 @@ def get_job_dict(job_url):
     return details
 
 
-doc = get_html(get_job_url(title, city))
-jobs_found = []
+def main():
+    print()
+    welcome = "Welcome to Job analyzer"
+    print(welcome)
+    print("=" * len(welcome))
+    print()
 
-while True:
-    page_nav = doc.find("nav", {"role": "navigation", "class": "css-1hog1e3"})
-    jobs = get_jobs_on_page(doc)
-    for job in jobs:
-        job_found = get_job_dict(job)
-        jobs_found.append(job_found)
-        print(job_found)
-    next_page = page_nav.find("a", {"aria-label": "Next page"})
-    if next_page:
-        doc = get_html(next_page['href'])
-    else:
-        break
-    if len(jobs_found) >= 1000:
-        break
+    title = input("Enter your desired job title: ")
+    city = input("Enter your desired location: ")
+
+    doc = get_html(get_job_url(title, city))
+    jobs_found = []
+
+    while True:
+        page_nav = doc.find("nav", {"role": "navigation", "class": "css-1hog1e3"})
+        jobs = get_jobs_on_page(doc)
+        for job in jobs:
+            job_found = get_job_dict(job)
+            jobs_found.append(job_found)
+            print(job_found)
+        next_page = page_nav.find("a", {"aria-label": "Next page"})
+        if next_page:
+            doc = get_html(next_page['href'])
+        else:
+            break
+        if len(jobs_found) >= 1000:
+            break
+
+
+if __name__ == "__main__":
+    main()
