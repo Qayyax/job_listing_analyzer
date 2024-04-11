@@ -64,13 +64,17 @@ def get_job_dict(job_url):
 
 def main():
     print()
-    welcome = "Welcome to Job analyzer"
+    welcome = "Welcome to Job Listing Analyzer"
     print(welcome)
     print("=" * len(welcome))
     print()
 
-    title = input("Enter your desired job title: ")
-    city = input("Enter your desired location: ")
+    title = input("Enter your desired job title, skill, or company: ")
+    city = input("Enter your desired location, province, or remote: ")
+
+    print("Searching for jobs online for you")
+    print()
+    print("+" * 15)
 
     doc = get_html(get_job_url(title, city))
     jobs_found = []
