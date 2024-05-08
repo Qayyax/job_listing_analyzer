@@ -77,6 +77,10 @@ def main():
     print("+" * 15)
 
     doc = get_html(get_job_url(title, city))
+    jobs_available = doc.find('div',
+                              {"data-testid": "headerSerpJobCount"}
+                              ).find('p', {"class": "css-gu0het"}).text
+
     jobs_found = []
     data = {
         'job_title': [],
@@ -86,10 +90,17 @@ def main():
         'link': []
     }
 
+    count = 0
     while True:
-        page_nav = doc.find("nav", {"role": "navigation", "class": "css-1hog1e3"})
+        page_nav = doc.find("nav",
+                            {
+                             "role": "navigation",
+                             "class": "css-1hog1e3"
+                             }
+                            )
         jobs = get_jobs_on_page(doc)
         for job in jobs:
+            count += 1
             job_found = get_job_dict(job)
             jobs_found.append(job_found)
             data['job_title'].append(job_found['title'])
@@ -104,12 +115,16 @@ def main():
             print(job_found['skills'])
             print(job_found['link'])
             print('-' * 10)
+            print()
+            print(f"{count} of {int(jobs_available)} found")
+            print()
+            print('=' * 10)
         next_page = page_nav.find("a", {"aria-label": "Next page"})
         if next_page:
             doc = get_html(next_page['href'])
         else:
             break
-        if len(jobs_found) >= 300:
+        if len(jobs_found) >= int(jobs_available):
             break
 
     df = pd.DataFrame(data)
