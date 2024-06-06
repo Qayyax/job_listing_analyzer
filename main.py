@@ -55,8 +55,8 @@ def get_job_dict(job_url):
         "title": job_title.strip(),
         "company": job_company.strip(),
         "location": job_location.strip(),
+        "link": job_links,
         "skills": skills.strip() if skills else None,
-        "link": job_links
     }
 
     return details
