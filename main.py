@@ -86,8 +86,8 @@ def main():
         'job_title': [],
         'company': [],
         'location': [],
+        'link': [],
         'skills': [],
-        'link': []
     }
 
     count = 0
