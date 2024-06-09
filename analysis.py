@@ -102,8 +102,8 @@ pdf.add_table(
 pdf.chapter_title('Basic Statistics - Skills')
 pdf.add_table([
     list(item) for item in skills_counts.most_common(10)], [90, 90],
-              ['Skill', 'Frequency']
-            )
+    ['Skill', 'Frequency']
+)
 
 # List of plots images name
 plot_paths = [
