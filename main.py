@@ -40,8 +40,10 @@ def get_job_dict(job_url):
     """
     job_links = 'https://www.workopolis.com' + job_url['href']
     job_html = get_html(job_links)
-    job_title = job_html.find('h1', {"class": "chakra-heading css-yvgnf2"}).text
-    job_company = job_html.find('span', {"data-testid": "viewJobCompanyName"}).text
+    job_title = job_html.find(
+        'h1', {"class": "chakra-heading css-yvgnf2"}).text
+    job_company = job_html.find(
+        'span', {"data-testid": "viewJobCompanyName"}).text
     job_location = job_html.find(
         'span', {"data-testid": "viewJobCompanyLocation"}
     ).text
@@ -49,7 +51,8 @@ def get_job_dict(job_url):
     skills_tag = skills_div.find_all(
         "span", {"data-testid": "viewJobQualificationItem"}
     ) if skills_div else None
-    skills = ", ".join([skill.text for skill in skills_tag]) if skills_tag else None
+    skills = ", ".join([skill.text for skill in skills_tag]
+                       ) if skills_tag else None
 
     details = {
         "title": job_title.strip(),
@@ -94,9 +97,9 @@ def main():
     while True:
         page_nav = doc.find("nav",
                             {
-                             "role": "navigation",
-                             "class": "css-1hog1e3"
-                             }
+                                "role": "navigation",
+                                "class": "css-1hog1e3"
+                            }
                             )
         jobs = get_jobs_on_page(doc)
         for job in jobs:
