@@ -38,31 +38,42 @@ def get_job_dict(job_url):
     """
     This function returns a dictionary of the job details.
     """
-    job_links = 'https://www.workopolis.com' + job_url['href']
-    job_html = get_html(job_links)
-    job_title = job_html.find(
-        'h1', {"class": "chakra-heading css-yvgnf2"}).text
-    job_company = job_html.find(
-        'span', {"data-testid": "viewJobCompanyName"}).text
-    job_location = job_html.find(
-        'span', {"data-testid": "viewJobCompanyLocation"}
-    ).text
-    skills_div = job_html.find(class_="chakra-wrap__list css-19lo6pj")
-    skills_tag = skills_div.find_all(
-        "span", {"data-testid": "viewJobQualificationItem"}
-    ) if skills_div else None
-    skills = ", ".join([skill.text for skill in skills_tag]
-                       ) if skills_tag else None
+    try:
+        job_links = 'https://www.workopolis.com' + job_url['href']
+        job_html = get_html(job_links)
+        job_title = job_html.find(
+            'h1', {"class": "chakra-heading css-yvgnf2"}).text
+        job_company = job_html.find(
+            'span', {"data-testid": "viewJobCompanyName"}).text
+        job_location = job_html.find(
+            'span', {"data-testid": "viewJobCompanyLocation"}
+        ).text
+        skills_div = job_html.find(class_="chakra-wrap__list css-19lo6pj")
+        skills_tag = skills_div.find_all(
+            "span", {"data-testid": "viewJobQualificationItem"}
+        ) if skills_div else None
+        skills = ", ".join([skill.text for skill in skills_tag]
+                           ) if skills_tag else None
 
-    details = {
-        "title": job_title.strip(),
-        "company": job_company.strip(),
-        "location": job_location.strip(),
-        "link": job_links,
-        "skills": skills.strip() if skills else None,
-    }
+        details = {
+            "title": job_title.strip(),
+            "company": job_company.strip(),
+            "location": job_location.strip(),
+            "link": job_links,
+            "skills": skills.strip() if skills else None,
+        }
 
-    return details
+        return details
+    except Exception as e:
+        print(e)
+        details = {
+            "title": "",
+            "company": "",
+            "location": "",
+            "link": "",
+            "skills": "",
+        }
+        return details
 
 
 def main():
@@ -132,7 +143,7 @@ def main():
 
     df = pd.DataFrame(data)
     # Export csv file
-    df.to_csv('jobs.csv', index=False)
+    df.to_csv("jobs.csv", index=False)
     print()
     print("+" * 15)
     print("Exported jobs found as csv file (jobs.csv)")
