@@ -143,10 +143,13 @@ def main():
 
     df = pd.DataFrame(data)
     # Export csv file
-    df.to_csv("jobs.csv", index=False)
+    title_striped = title.replace(" ", "_")
+    city_stripped = city.replace(" ", "_")
+    file_name = f"{title_striped}_{city_stripped}.csv"
+    df.to_csv(file_name, index=False)
     print()
     print("+" * 15)
-    print("Exported jobs found as csv file (jobs.csv)")
+    print(f"Exported jobs found as csv file ({file_name})")
 
 
 if __name__ == "__main__":
