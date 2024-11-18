@@ -4,3 +4,4 @@
 /location_postings.png
 /skills_wordcloud.png
 *.csv
+.DS_Store

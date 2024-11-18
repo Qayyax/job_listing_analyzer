@@ -25,7 +25,7 @@ Before you run the project, you need to have Python installed on your machine (P
 Install the required Python libraries using pip:
 
 ```python
-pip install pandas matplotlib beautifulsoup4 request wordcloud
+pip install -r requirements.txt
 ```
 
 ## Project Structure
